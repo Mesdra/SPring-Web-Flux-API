@@ -3,6 +3,7 @@ spring:
     mongodb:
       database: ${DB_NAME:mongo_db}
       host: localhost
+      auto-index-creation: true
       port: 27017
   application:
     name: spring-web-flux
