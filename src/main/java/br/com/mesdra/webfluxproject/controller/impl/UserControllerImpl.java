@@ -1,6 +1,7 @@
 package br.com.mesdra.webfluxproject.controller.impl;
 
 import br.com.mesdra.webfluxproject.controller.UserController;
+import br.com.mesdra.webfluxproject.mapper.UserMapper;
 import br.com.mesdra.webfluxproject.model.request.UserRequest;
 import br.com.mesdra.webfluxproject.model.response.UserResponse;
 import br.com.mesdra.webfluxproject.service.UserService;
@@ -20,6 +21,7 @@ public class UserControllerImpl implements UserController {
 
 
     private final UserService service;
+    private final UserMapper mapper;
 
     @Override
     public ResponseEntity<Mono<Void>> save(final @Valid UserRequest request) {
@@ -30,12 +32,13 @@ public class UserControllerImpl implements UserController {
     @Override
     public ResponseEntity<Mono<UserResponse>> find(String id) {
 
-        return null;
+        return ResponseEntity.ok().body(service.findById(id).map(mapper::toResponse));
     }
 
     @Override
     public ResponseEntity<Flux<UserResponse>> findAll() {
-        return null;
+
+        return ResponseEntity.ok().body(service.findAll().map(mapper::toResponse));
     }
 
     @Override

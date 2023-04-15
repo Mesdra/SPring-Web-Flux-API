@@ -1,6 +1,7 @@
 package br.com.mesdra.webfluxproject.controller.exceptions;
 
 
+import br.com.mesdra.webfluxproject.service.exception.ObjectNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,19 @@ public class ControllerExceptionHandler {
             error.addError(er.getField(), er.getDefaultMessage());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Mono.just(error));
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    ResponseEntity<Mono<StandardError>> objectNotFound(ObjectNotFoundException ex, ServerHttpRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(
+                Mono.just(
+                        StandardError.builder()
+                                     .timestamp(now())
+                                     .status(HttpStatus.NOT_FOUND.value())
+                                     .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                                     .message(verifyDupKey(ex.getMessage()))
+                                     .path(request.getPath().toString()).build()
+                         ));
     }
 
     private String verifyDupKey(String message) {
