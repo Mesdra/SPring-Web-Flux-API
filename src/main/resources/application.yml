@@ -1,6 +1,8 @@
 spring:
   data:
     mongodb:
-      database: mongo_db
+      database: ${DB_NAME:mongo_db}
       host: localhost
       port: 27017
+  application:
+    name: spring-web-flux
