@@ -50,7 +50,7 @@ public class ControllerExceptionHandler {
                                      .timestamp(now())
                                      .status(HttpStatus.NOT_FOUND.value())
                                      .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                                     .message(verifyDupKey(ex.getMessage()))
+                                     .message(ex.getMessage())
                                      .path(request.getPath().toString()).build()
                          ));
     }
