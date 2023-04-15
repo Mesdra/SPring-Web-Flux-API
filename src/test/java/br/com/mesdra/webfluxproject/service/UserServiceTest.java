@@ -4,6 +4,7 @@ import br.com.mesdra.webfluxproject.entity.User;
 import br.com.mesdra.webfluxproject.mapper.UserMapper;
 import br.com.mesdra.webfluxproject.model.request.UserRequest;
 import br.com.mesdra.webfluxproject.repository.UserRepository;
+import br.com.mesdra.webfluxproject.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import reactor.test.StepVerifier;
 
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -96,4 +98,18 @@ class UserServiceTest {
 
         verify(repository, times(1)).findAndRemove(any());
     }
+
+    @Test
+    void testHandleNotFound() {
+        when(repository.findById(any())).thenReturn(Mono.empty());
+
+        try {
+            service.findById("123").block();
+        } catch (Exception ex) {
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(String.format("Objeto não encontrado. Id %s Tipo %s", "123", User.class.getSimpleName()), ex.getMessage());
+        }
+
+    }
+
 }
